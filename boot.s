@@ -1,6 +1,12 @@
 .intel_syntax noprefix
 .code32
 
+.section .multiboot
+    .align 4
+    .long 0x1BADB002            # magic
+    .long 0x0                   # flags
+    .long -(0x1BADB002)         # checksum
+
 .global start
 
 # Selector definitions
