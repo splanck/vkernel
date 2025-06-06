@@ -2,9 +2,11 @@
 .code64
 
 .global _start
+.global kernel_entry
 .extern kernel_main
 
 .section .text
+kernel_entry:
 _start:
     cli
     # Load data segment selector (assume 0x10)
