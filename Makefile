@@ -25,9 +25,7 @@ kernel.bin: kernel.elf
 
 iso: kernel.bin
 	mkdir -p iso/boot/grub
-	echo 'set timeout=0' > iso/boot/grub/grub.cfg
-	echo 'set default=0' >> iso/boot/grub/grub.cfg
-	echo 'multiboot2 /boot/kernel.bin' >> iso/boot/grub/grub.cfg
+	cp grub/grub.cfg iso/boot/grub/
 	cp kernel.bin iso/boot/
 	grub-mkrescue -o kernel.iso iso >/dev/null 2>&1
 
