@@ -2,7 +2,7 @@ CC ?= x86_64-elf-gcc
 AS ?= x86_64-elf-as
 LD ?= x86_64-elf-ld
 OBJCOPY ?= objcopy
-CFLAGS=-ffreestanding -m64 -nostdlib -nostdinc -fno-pic -mno-red-zone -c
+CFLAGS=-ffreestanding -m64 -nostdlib -nostdinc -fno-pic -mno-red-zone -c -fcf-protection=none
 ASFLAGS=--64
 LDFLAGS=-T linker.ld -nostdlib
 
