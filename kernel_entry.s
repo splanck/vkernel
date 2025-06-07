@@ -1,4 +1,3 @@
-.intel_syntax noprefix
 .code64
 
 .global _start
@@ -10,15 +9,15 @@ kernel_entry:
 _start:
     cli
     # Load data segment selector (assume 0x10)
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
+    movw $0x10, %ax
+    movw %ax, %ds
+    movw %ax, %es
+    movw %ax, %fs
+    movw %ax, %gs
+    movw %ax, %ss
 
     # Set up stack pointer
-    lea rsp, [stack_top]
+    leaq stack_top(%rip), %rsp
 
     call kernel_main
 
