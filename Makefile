@@ -35,6 +35,7 @@ clean:
 	rm -rf *.o kernel.elf kernel.bin kernel.iso iso
 
 run: iso
-	qemu-system-x86_64 -cdrom kernel.iso -display none -serial mon:stdio
+	# Boot the ISO in QEMU with default graphical output
+	qemu-system-x86_64 -cdrom kernel.iso
 
 .PHONY: all iso clean run
