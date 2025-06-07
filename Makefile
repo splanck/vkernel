@@ -33,7 +33,11 @@ iso: kernel.bin
 	mkdir -p iso/boot/grub
 	cp grub/grub.cfg iso/boot/grub/
 	cp kernel.bin iso/boot/
-	grub-mkrescue -o kernel.iso iso >/dev/null 2>&1
+	if ! command -v grub-mkrescue >/dev/null; then \
+	echo "Error: grub-mkrescue not found. Please install GRUB to build the ISO."; \
+	exit 1; \
+	fi
+	grub-mkrescue -o kernel.iso iso
 
 clean:
 	rm -rf *.o kernel.elf kernel.bin kernel.iso iso
