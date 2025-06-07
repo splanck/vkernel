@@ -1,6 +1,6 @@
 .code32
 
-.section .multiboot,"a"
+.section .multiboot, "a", @progbits
     .align 8
 multiboot_header:
     .long 0xE85250D6            # magic (multiboot2)
