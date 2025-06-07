@@ -19,6 +19,12 @@ kernel.o: kernel.c
 
 kernel.elf: boot.o kernel_entry.o kernel.o linker.ld
 	$(LD) $(LDFLAGS) -o $@ boot.o kernel_entry.o kernel.o
+	@if [ -f $@ ]; then \
+		ls -l $@; \
+	else \
+		echo "Error: kernel.elf was not created. Check the link command and file paths."; \
+		exit 1; \
+	fi
 
 kernel.bin: kernel.elf
 	$(OBJCOPY) -O binary $< $@
