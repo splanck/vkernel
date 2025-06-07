@@ -4,10 +4,11 @@ This repository contains a minimal x86_64 hobby kernel.
 
 ## Building
 
-Ensure the cross toolchain is available in your `PATH`:
+Before building, source the environment setup script to add the cross
+toolchain to your `PATH` and export the build variables:
 
 ```
-export PATH="$HOME/opt/cross/bin:$PATH"
+source envsetup.sh
 ```
 
 Then build the kernel:
