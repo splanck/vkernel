@@ -17,6 +17,7 @@ Then build the kernel:
 make
 ```
 
+The GRUB configuration used for the ISO lives in `grub/grub.cfg`.
 To create a bootable ISO image:
 
 ```
