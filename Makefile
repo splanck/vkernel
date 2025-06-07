@@ -1,7 +1,7 @@
-CC=gcc
-AS=as
-LD=ld
-OBJCOPY=objcopy
+CC ?= x86_64-elf-gcc
+AS ?= x86_64-elf-as
+LD ?= x86_64-elf-ld
+OBJCOPY ?= x86_64-elf-objcopy
 CFLAGS=-ffreestanding -m64 -nostdlib -nostdinc -fno-pic -mno-red-zone -c
 ASFLAGS=--64
 LDFLAGS=-T linker.ld -nostdlib
@@ -23,18 +23,17 @@ kernel.elf: boot.o kernel_entry.o kernel.o linker.ld
 kernel.bin: kernel.elf
 	$(OBJCOPY) -O binary $< $@
 
-iso: kernel.bin
+iso: kernel.bin grub/grub.cfg
 	mkdir -p iso/boot/grub
-	echo 'set timeout=0' > iso/boot/grub/grub.cfg
-	echo 'set default=0' >> iso/boot/grub/grub.cfg
-	echo 'multiboot2 /boot/kernel.bin' >> iso/boot/grub/grub.cfg
 	cp kernel.bin iso/boot/
+	cp grub/grub.cfg iso/boot/grub/
 	grub-mkrescue -o kernel.iso iso >/dev/null 2>&1
 
 clean:
 	rm -rf *.o kernel.elf kernel.bin kernel.iso iso
 
 run: iso
-	qemu-system-x86_64 -cdrom kernel.iso -display none -serial mon:stdio
+	# Boot the ISO in QEMU with default graphical output
+	qemu-system-x86_64 -cdrom kernel.iso
 
 .PHONY: all iso clean run

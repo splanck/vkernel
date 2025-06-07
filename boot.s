@@ -1,11 +1,17 @@
-.intel_syntax noprefix
 .code32
 
 .section .multiboot
-    .align 4
-    .long 0x1BADB002            # magic
-    .long 0x0                   # flags
-    .long -(0x1BADB002)         # checksum
+    .align 8
+multiboot_header:
+    .long 0xE85250D6            # magic (multiboot2)
+    .long 0                     # architecture (i386)
+    .long header_end - multiboot_header
+    .long -(0xE85250D6 + 0 + (header_end - multiboot_header))
+    .align 8
+    .short 0                    # end tag type
+    .short 0
+    .long 8                     # size
+header_end:
 
 .global start
 
@@ -18,43 +24,43 @@ start:
     cli
 
     # Load GDT suitable for long mode
-    lgdt [gdt_descriptor]
+    lgdt gdt_descriptor
 
     # Reload segment registers with 32-bit data selector
-    mov ax, DATA_SEL
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
+    movw $DATA_SEL, %ax
+    movw %ax, %ds
+    movw %ax, %es
+    movw %ax, %fs
+    movw %ax, %gs
+    movw %ax, %ss
 
     # Enable PAE in CR4
-    mov eax, cr4
-    or eax, 0x20
-    mov cr4, eax
+    mov %cr4, %eax
+    orl $0x20, %eax
+    mov %eax, %cr4
 
     # Point CR3 to PML4
-    mov eax, offset pml4_table
-    mov cr3, eax
+    movl $pml4_table, %eax
+    mov %eax, %cr3
 
     # Enable long mode in EFER
-    mov ecx, 0xC0000080
+    movl $0xC0000080, %ecx
     rdmsr
-    or eax, 0x100
+    orl $0x100, %eax
     wrmsr
 
     # Enable paging
-    mov eax, cr0
-    or eax, 0x80000001     # PG | PE
-    mov cr0, eax
+    mov %cr0, %eax
+    orl $0x80000001, %eax     # PG | PE
+    mov %eax, %cr0
 
     # Far jump to 64-bit code segment
-    ljmp CODE64_SEL, offset long_mode_start
+    ljmp $CODE64_SEL, $long_mode_start
 
 .code64
 long_mode_start:
     # Set up stack for kernel
-    lea rsp, [stack_top]
+    leaq stack_top(%rip), %rsp
 
     .extern kernel_entry
     jmp kernel_entry
